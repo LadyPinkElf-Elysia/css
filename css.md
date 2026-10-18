@@ -76,6 +76,8 @@
 
 ### 基础语法
 
+可利用这个网址[练习](https://css-speedrun.netlify.app/)
+
 - 选择器
     选择器决定样式作用在哪些元素上，是 CSS 的地基
     | 类型 | 写法 | 含义 |
@@ -1025,6 +1027,8 @@
 
 ### 定位
 
+可利用这个网址[练习](https://anchoreum.com/)
+
 - `position` 定位模式
     可以控制定位的模式，有 `static`（默认定位）、`absolute`（绝对定位）、`relative`（相对定位）、`fixed`（固定定位）、`sticky`（粘性定位）
     
@@ -1352,6 +1356,25 @@
     ```
     `display: none` 和 `visibility: hidden` 的区别：前者不占位、不可交互；后者保留占位、不可交互
 
+- `vertical-align` 垂直对齐
+    控制行内元素、行内块元素、表格单元格的垂直对齐
+    | 选项值 | 释义 |
+    |:--|:--|
+    | `baseline` | 默认，按基线对齐 |
+    | `top` / `bottom` | 顶部 / 底部对齐 |
+    | `middle` | 中线对齐 |
+    | `text-top` / `text-bottom` | 对齐文字顶部 / 底部 |
+    | `px` / `%` | 相对基线偏移 |
+    ```css
+    img {
+        vertical-align: middle; /* 图片和文字垂直居中对齐 */
+    }
+    td {
+        vertical-align: top;
+    }
+    ```
+    只对行内、行内块、表格单元格生效，块级元素上写无效。`inline-block` 元素底部默认有基线空隙，用 `vertical-align: top` 或 `middle` 消除。
+
 ### 弹性布局(Flex)
 
 可利用这个网址[练习](https://flexboxfroggy.com/)
@@ -1506,6 +1529,8 @@
     ```
 
 ### 网格布局(Grid)
+
+可利用这个网址[练习](https://cssgridgarden.com/)
 
 - `display`
     当使用网格布局时，先把`display`的值改成`grid`(块级网格容器)或`inline-grid`(行内网格容器)
@@ -1904,3 +1929,113 @@
     }
     ```
     做动效时加上这段，对晕动症用户更友好，也是无障碍规范的要求。
+
+## 进阶
+
+- `scroll-behavior` 平滑滚动
+    控制滚动容器的滚动行为
+    | 选项值 | 释义 |
+    |:--|:--|
+    | `auto` | 默认，立即跳转 |
+    | `smooth` | 平滑滚动 |
+    ```css
+    html {
+        scroll-behavior: smooth;
+    }
+    ```
+    尊重用户“减少动态效果”设置：
+    ```css
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+    ```
+
+- `@supports` 特性检测
+    根据浏览器是否支持某个 CSS 特性来应用样式
+    ```css
+    @supports (display: grid) {
+        .layout {
+            display: grid;
+        }
+    }
+
+    @supports not (display: grid) {
+        .layout {
+            display: flex;
+        }
+    }
+    ```
+    可以和 `and`、`or` 组合：
+    ```css
+    @supports (display: grid) and (gap: 16px) {
+        .layout { display: grid; gap: 16px; }
+    }
+    ```
+
+- `@font-face` 自定义字体
+    引入字体文件，用 `font-family` 命名后使用
+    ```css
+    @font-face {
+        font-family: "MyFont";
+        src: url("./fonts/myfont.woff2") format("woff2"),
+             url("./fonts/myfont.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    body {
+        font-family: "MyFont", sans-serif;
+    }
+    ```
+    | 描述符 | 说明 |
+    |:--|:--|
+    | `font-family` | 自定义名称，后面用这个引用 |
+    | `src` | 字体文件地址，多个格式做回退 |
+    | `font-weight` / `font-style` | 这个文件对应的字重和风格 |
+    | `font-display` | 加载策略，`swap` 先用回退字体，加载完替换 |
+
+- `@layer` 级联层
+    把样式分层，控制优先级，低层永远被高层覆盖，不管选择器权重
+    ```css
+    @layer reset, base, components, utilities;
+
+    @layer reset {
+        * { margin: 0; padding: 0; }
+    }
+
+    @layer base {
+        a { color: blue; }
+    }
+
+    @layer components {
+        .button { color: red; }
+    }
+
+    @layer utilities {
+        .text-red { color: red !important; }
+    }
+    ```
+    层顺序由第一次声明决定，后声明的层优先级更高。`!important` 在层里的规则会反转，低层的 `!important` 反而优先。
+
+- `@container` 容器查询
+    根据父容器尺寸而不是视口尺寸应用样式，组件级响应式
+    ```css
+    .card-wrapper {
+        container-type: inline-size;
+        container-name: card;
+    }
+
+    @container card (min-width: 400px) {
+        .card {
+            display: flex;
+        }
+    }
+    ```
+    | 属性 | 说明 |
+    |:--|:--|
+    | `container-type` | `inline-size`（宽度查询）、`size`（宽高查询）、`normal` |
+    | `container-name` | 给容器命名，查询时指定 |
+    和媒体查询的区别：媒体查询看视口，容器查询看父容器。做组件库、可复用卡片时，容器查询比媒体查询更合适。
