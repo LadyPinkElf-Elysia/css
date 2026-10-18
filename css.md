@@ -149,7 +149,7 @@
     第三个参数是阴影晕染的模糊半径（边缘“羽化”），值越大，阴影边缘越柔和、越向外晕开
     第四个参数是阴影晕染的扩展半径（阴影“胖瘦”），正值：阴影在模糊之前先向外扩大，负值：阴影在模糊之前先向内收缩，默认为0
     第五个参数是阴影晕染的颜色
-    第六个参数是`inset`，表示外阴影
+    第六个参数是`inset`，表示内阴影；不写`inset`就是外阴影
     ```css
     .box{
         box-shadow:5px 5px 5px grey;
@@ -296,7 +296,7 @@
     第一个参数是`flex-direction`
     第二个参数是`flex-wrap`
     ```css
-    .item{
+    .container{
         display:flex;
         flex-flow:column wrap;
     }
@@ -367,7 +367,8 @@
     `gap`属性是`column-gap`(列间距)和`row-gap`(行间距)的合并简写形式，接受1-2个值
     ```css
     .container {
-        grid-gap: 20px 20px;
+        gap: 20px;        /* 行间距和列间距都是 20px */
+        gap: 10px 20px;   /* 行间距 10px，列间距 20px */
     }
     ```
 - `grid-template-areas` 网格区域
@@ -396,7 +397,7 @@
     |start|对齐单元格的起始边缘|
     |end|对齐单元格的结束边缘|
     |center|单元格内部居中|
-    |stretch|拉伸，占满单元格的整个宽度（默认值）|
+    |stretch|拉伸，占满整个单元格（默认值）|
 
     ```css
     .container{
@@ -424,7 +425,7 @@
     }
     ```
 - `grid-auto-rows` 和 `grid-auto-columns`
-    没有被显式地定义行高或列宽的网格元素，就需要使用`grid-auto-row`和`grid-auto-columns`属性来指定它们的默认尺寸
+    没有被显式地定义行高或列宽的网格元素，就需要使用`grid-auto-rows`和`grid-auto-columns`属性来指定它们的默认尺寸
     ```css
     .grid-container {
         display: grid;
@@ -436,7 +437,7 @@
     `grid-row`属性是`grid-row-start`属性和`grid-row-end`的合并简写形式
     ```css
     /*1.指定为第几个网格线*/
-    /*项目item-1占据第一行，从第一根列线到第三根列线。*/
+    /*项目 item-1 占据第 1 行，从第 1 条列线到第 3 条列线（即跨第 1、2 列）*/
     .item-1 {
         grid-column: 1 / 3;
         grid-row: 1 / 2;
@@ -472,8 +473,8 @@
     `grid-area`属性指定项目放在哪一个区域。
     ```css
     .item-1 {
-        /*1号项目位于e区域*/
-        grid-area: e;
+        /*1号项目位于header区域*/
+        grid-area: header;
     }
     ```
     `grid-area`属性还可用作`grid-row-start`、`grid-row-end`、`grid-column-start`、`grid-column-end`的合并简写形式，直接指定项目的位置。
@@ -495,9 +496,9 @@
     |start|对齐单元格的起始边缘|
     |end|对齐单元格的结束边缘|
     |center|单元格内部居中|
-    |stretch|拉伸，占满单元格的整个宽度（默认值）|
+    |stretch|拉伸，占满整个单元格（默认值）|
     ```css
-    .container{
+    .item{
         place-self: center center;
         /* 第一个是align-self 第二个是justify-self */
     }
